@@ -1,0 +1,50 @@
+
+
+svg {
+    border: 1px solid black;
+}
+
+#container {
+    display: flex;
+}
+
+#svg-container {
+}
+
+#layer-container {
+    flex: 0 0 200px;
+    border: 1px solid black;
+    height: 100vh;
+
+}
+
+#editor-container {
+    border: 1px solid black;
+    flex:0 0  200px;
+    height: 100vh;
+}
+
+
+.tools-element{
+    padding:10px;
+    color:blue;
+}
+
+.tools-element-selected{
+    padding:10px;
+    color:orange;
+}
+
+#tools-container {
+    border: 1px solid black;
+
+}
+
+.selectedMode {
+    color:orange !important;
+}
+
+.unselected-element {
+    pointer-events: none;
+}
+
