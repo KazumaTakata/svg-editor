@@ -18,6 +18,11 @@ interface Color {
     b: number;
 }
 
+export interface Point {
+    x: number;
+    y: number;
+}
+
 
 @Component({
     selector: 'app-root',
@@ -34,6 +39,35 @@ export class AppComponent implements OnInit, OnDestroy  {
     svg_pos = {start: {x:0, y:0}, end: {x:0, y:0}}
     current_index= 0
     cursor_box_size = 8
+
+    cursor_boxs = ["leftup", "rightup", "leftdown", "rightdown"]
+
+    calc_cursor_offset_x(cursor_boxs_kind:string, element:Element):number {
+        switch (cursor_boxs_kind) {
+            case "leftup":
+                return - element.rx - this.cursor_box_size/2
+            case "leftdown":
+                return - element.rx - this.cursor_box_size/2
+            case "rightup":
+                return    element.rx - this.cursor_box_size/2
+            case "rightdown":
+                return   element.rx - this.cursor_box_size/2
+
+        }
+    }
+
+    calc_cursor_offset_y(cursor_boxs_kind:string, element:Element):number {
+        switch (cursor_boxs_kind) {
+            case "leftup":
+                return - element.ry - this.cursor_box_size/2
+            case "rightup":
+                return - element.ry - this.cursor_box_size/2
+            case "leftdown":
+                return  element.ry - this.cursor_box_size/2
+            case "rightdown":
+                return  element.ry - this.cursor_box_size/2
+        }
+    }
 
 
 
@@ -72,15 +106,20 @@ export class AppComponent implements OnInit, OnDestroy  {
         return `rgb(${color.r},${color.g},${color.b})`
     }
 
+    calc_center_and_radius (startpoint:Point, endpoint:Point) {
+        var cx = (startpoint.x + endpoint.x)/2
+        var cy = (startpoint.y + endpoint.y)/2
+        var rx = Math.abs(startpoint.x - endpoint.x)/2
+        var ry = Math.abs(startpoint.y - endpoint.y)/2
+        return {x:cx, y:cy, rx:rx, ry:ry}
+    }
+
     svg_mousemove(event) {
         if (this.svg_ifdrag) {
             if (this.current_mode == "ellipse" || "square" ) {
                 var endpoint = get_pos_in_svg(event)
-                var cx = (this.svg_pos.start.x + endpoint.x)/2
-                var cy = (this.svg_pos.start.y + endpoint.y)/2
-                var rx = Math.abs(this.svg_pos.start.x - endpoint.x)/2
-                var ry = Math.abs(this.svg_pos.start.y - endpoint.y)/2
-                this.elements[this.elements.length - 1] =  { kind: this.current_mode, x:cx, y:cy, rx:rx, ry:ry, color:{r:0, g:0, b:0}}
+                var center_and_radius = this.calc_center_and_radius(this.svg_pos.start, endpoint) 
+                this.elements[this.elements.length - 1] =  { kind: this.current_mode, ...center_and_radius  , color:{r:0, g:0, b:0}}
             }
         }
     }
@@ -119,6 +158,33 @@ export class AppComponent implements OnInit, OnDestroy  {
             this.ifdrag = true
             this.state.setStateCurrentIndex(index)
         }
+    }
+
+
+    cursor_mouseup(event, kind:string) {
+    }
+
+
+    cursor_mousedown(event, kind:string):void{
+        switch (kind) {
+            case "leftup":
+                var element:Element = this.elements[this.current_index]
+            var current_pos:Point = get_pos_in_svg(event)
+            var rightdown:Point = { x:element.x + element.rx, y: element.y + element.ry }
+            var center_and_radius = this.calc_center_and_radius(current_pos, rightdown)
+            this.elements[this.elements.length - 1].x =  center_and_radius.x
+            this.elements[this.elements.length - 1].y =  center_and_radius.y
+            this.elements[this.elements.length - 1].rx =  center_and_radius.rx
+            this.elements[this.elements.length - 1].ry =  center_and_radius.ry
+
+
+
+            case "rightup":
+                case "leftdown":
+                case "rightdown":
+        }
+
+
     }
 
 
