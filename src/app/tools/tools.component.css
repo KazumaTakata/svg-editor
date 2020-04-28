@@ -1,0 +1,24 @@
+
+.tools-element{
+    padding:10px;
+    color:blue;
+}
+
+.tools-element-selected{
+    padding:10px;
+    color:orange;
+}
+
+#tools-container {
+    border: 1px solid black;
+    height: 100vh;
+
+}
+
+
+
+.selectedMode {
+    color:orange !important;
+}
+
+

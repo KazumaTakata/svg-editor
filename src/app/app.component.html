@@ -1,25 +1,20 @@
 <div id="container">
-    <div id="tools-container">
-        <div class="tools-element" *ngFor="let mode of modes" [class.selectedMode]="current_mode == mode.mode" (click)="mode_click($event, mode.mode)">
-            <i class="fas fa-{{mode.font}}"></i>
-        </div>
-    </div>
-
+    <app-tools></app-tools>
     <div id="svg-container">
         <svg id="mysvg" width="300" height="300" (mousemove)="svg_mousemove($event)"(mouseup)="svg_mouseup($event)" (mousedown)="svg_mousedown($event)">
             <ng-container  *ngFor="let element of elements; let i = index;">
                 <ng-container *ngIf="element.kind=='ellipse'">
-                    <ellipse  [class.unselected-element]="currentIndex != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.cx]="element.x" [attr.cy]="element.y" [attr.rx]="element.rx" [attr.ry]="element.ry" [attr.fill]="rgb_color(element.color)" />
+                    <ellipse  [class.unselected-element]="current_index != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.cx]="element.x" [attr.cy]="element.y" [attr.rx]="element.rx" [attr.ry]="element.ry" [attr.fill]="rgb_color(element.color)" />
                 </ng-container>
                 <ng-container *ngIf="element.kind=='square'">
-                    <rect   [class.unselected-element]="currentIndex != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x - element.rx" [attr.y]="element.y - element.ry" [attr.width]="element.rx*2" [attr.height]="element.ry*2" [attr.fill]="rgb_color(element.color)" />
+                    <rect   [class.unselected-element]="current_index != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x - element.rx" [attr.y]="element.y - element.ry" [attr.width]="element.rx*2" [attr.height]="element.ry*2" [attr.fill]="rgb_color(element.color)" />
 
-                    <ng-container *ngIf="currentIndex == i">
-                        <rect   [class.unselected-element]="currentIndex != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x - element.rx" [attr.y]="element.y - element.ry" [attr.width]="element.rx*2" [attr.height]="element.ry*2" stroke-width="1" stroke="gray" fill="none" />
-                        <rect   [class.unselected-element]="currentIndex != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x -  element.rx - cursor_box_size/2" [attr.y]="element.y - element.ry - cursor_box_size/2" [attr.width]="cursor_box_size" [attr.height]="cursor_box_size" stroke-width="1" stroke="gray" fill="white" />
-                        <rect   [class.unselected-element]="currentIndex != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x + element.rx - cursor_box_size/2" [attr.y]="element.y - element.ry - cursor_box_size/2" [attr.width]="cursor_box_size" [attr.height]="cursor_box_size" stroke-width="1" stroke="gray" fill="white" />
-                        <rect   [class.unselected-element]="currentIndex != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x -  element.rx - cursor_box_size/2" [attr.y]="element.y + element.ry - cursor_box_size/2" [attr.width]="cursor_box_size" [attr.height]="cursor_box_size" stroke-width="1" stroke="gray" fill="white" />
-                        <rect   [class.unselected-element]="currentIndex != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x + element.rx - cursor_box_size/2" [attr.y]="element.y + element.ry - cursor_box_size/2" [attr.width]="cursor_box_size" [attr.height]="cursor_box_size" stroke-width="1" stroke="gray" fill="white" />
+                    <ng-container *ngIf="current_index == i">
+                        <rect   [class.unselected-element]="current_index != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x - element.rx" [attr.y]="element.y - element.ry" [attr.width]="element.rx*2" [attr.height]="element.ry*2" stroke-width="1" stroke="gray" fill="none" />
+                        <rect   [class.unselected-element]="current_index != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x -  element.rx - cursor_box_size/2" [attr.y]="element.y - element.ry - cursor_box_size/2" [attr.width]="cursor_box_size" [attr.height]="cursor_box_size" stroke-width="1" stroke="gray" fill="white" />
+                        <rect   [class.unselected-element]="current_index != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x + element.rx - cursor_box_size/2" [attr.y]="element.y - element.ry - cursor_box_size/2" [attr.width]="cursor_box_size" [attr.height]="cursor_box_size" stroke-width="1" stroke="gray" fill="white" />
+                        <rect   [class.unselected-element]="current_index != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x -  element.rx - cursor_box_size/2" [attr.y]="element.y + element.ry - cursor_box_size/2" [attr.width]="cursor_box_size" [attr.height]="cursor_box_size" stroke-width="1" stroke="gray" fill="white" />
+                        <rect   [class.unselected-element]="current_index != i && ifdrag" (mousemove)="mousemove($event, i)"(mouseup)="mouseup($event, i)" (mousedown)="mousedown($event, i)" [attr.x]="element.x + element.rx - cursor_box_size/2" [attr.y]="element.y + element.ry - cursor_box_size/2" [attr.width]="cursor_box_size" [attr.height]="cursor_box_size" stroke-width="1" stroke="gray" fill="white" />
 
                     </ng-container>
 
@@ -28,47 +23,5 @@
             </ng-container>
         </svg>
     </div>
-
-    <div id="layer-container">
-        <div *ngIf="current_mode=='move'">
-            <div>
-                <p>
-                Color
-                </p>
-                <input [(ngModel)]="elements[currentIndex].color.r" placeholder="r"/>
-                <input [(ngModel)]="elements[currentIndex].color.g" placeholder="g"/>
-                <input [(ngModel)]="elements[currentIndex].color.b" placeholder="b"/>
-            </div>
-            <div>
-                <p>
-                Radius 
-                </p>
-                <input [(ngModel)]="elements[currentIndex].rx" placeholder="r"/>
-                <input [(ngModel)]="elements[currentIndex].ry" placeholder="r"/>
-            </div>
-
-            <div>
-                <p>
-                Center 
-                </p>
-                <input [(ngModel)]="elements[currentIndex].x" placeholder="r"/>
-                <input [(ngModel)]="elements[currentIndex].y" placeholder="r"/>
-            </div>
-
-
-        </div>
-
-        <div>
-            <p>
-            Layer
-            </p>
-            <ul>
-                <ng-container  *ngFor="let element of elements; let i = index;">
-                <li *ngIf="i != current_layer_index"  (mousemove)="layer_mousemove($event, i)"(mouseup)="layer_mouseup($event, i)" (mousedown)="layer_mousedown($event, i)" >
-                    x: {{element.x}}, y: {{element.y}}
-                </li>
-                </ng-container>
-            </ul>
-        </div>
-    </div>
+    <app-editor></app-editor>
 </div>

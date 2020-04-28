@@ -1,0 +1,8 @@
+
+<div id="tools-container">
+    <div class="tools-element" *ngFor="let mode of modes" [class.selectedMode]="current_mode == mode.mode" (click)="mode_click($event, mode.mode)">
+        <i class="fas fa-{{mode.font}}"></i>
+    </div>
+</div>
+
+
