@@ -19,7 +19,7 @@ export class StateService {
 
   constructor() { }
 
-  private initState: State = {mode: "move", elements: [ {kind: "ellipse", x:10, y:10, rx:20, ry:20, color:{ r:200, g:0, b:0} }, {kind: "square", x:100, y:100, rx:30, ry:20, color:{ r:0, g:200, b:0} }], current_index:0 }
+  private initState: State = {mode: "move", elements: [ {kind: "ellipse", x:10, y:10, rx:20, ry:20, color:{ r:200, g:0, b:0}, points:[] }, {kind: "square", x:100, y:100, rx:30, ry:20, color:{ r:0, g:200, b:0}, points:[] }], current_index:0 }
   private stateTracker = new BehaviorSubject<State>(this.initState);
 
 

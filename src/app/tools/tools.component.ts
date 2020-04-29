@@ -8,7 +8,7 @@ import { StateService } from '../state.service'
 })
 export class ToolsComponent implements OnInit, OnDestroy {
 
-    modes = [ {mode:"move", font:"arrows-alt"}, {mode:"ellipse", font:"circle"}, {mode:"square", font:"square"}]
+    modes = [ {mode:"move", font:"arrows-alt"}, {mode:"ellipse", font:"circle"}, {mode:"square", font:"square"}, {mode:"path", font:"pen" }]
     current_mode = "move"
     subscription;
 
