@@ -44,6 +44,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   cursor_boxs = ['leftup', 'rightup', 'leftdown', 'rightdown'];
 
+  keydown(event): void {
+    if (event.key == 'Enter') {
+      if (this.ifpathdrag) {
+        this.ifpathdrag = false;
+        this.svg_ifdrag = false;
+      }
+    }
+  }
+
   calc_cursor_offset_x(cursor_boxs_kind: string, element: Element): number {
     switch (cursor_boxs_kind) {
       case 'leftup':
@@ -232,15 +241,22 @@ export class AppComponent implements OnInit, OnDestroy {
       this.onclick_condition = 'create';
       this.svg_ifdrag = true;
       this.svg_pos.start = get_pos_in_svg(event);
-      this.elements.push({
-        kind: this.current_mode,
-        x: this.svg_pos.start.x,
-        y: this.svg_pos.start.y,
-        rx: 1,
-        ry: 1,
-        color: { r: 0, g: 0, b: 0 },
-        points: [this.svg_pos.start, this.svg_pos.start]
-      });
+      if (!this.ifpathdrag) {
+        this.elements.push({
+          kind: this.current_mode,
+          x: this.svg_pos.start.x,
+          y: this.svg_pos.start.y,
+          rx: 1,
+          ry: 1,
+          color: { r: 0, g: 0, b: 0 },
+          points: [this.svg_pos.start, this.svg_pos.start]
+        });
+      } else {
+        this.elements[this.elements.length - 1].points = [
+          ...this.elements[this.elements.length - 1].points,
+          this.svg_pos.start
+        ];
+      }
     }
   }
 

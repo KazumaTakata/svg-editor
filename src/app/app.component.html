@@ -1,4 +1,4 @@
-<div id="container">
+<div id="container" (keydown)="keydown($event)" tabindex="0">
   <app-tools></app-tools>
   <div id="svg-container">
     <svg
@@ -93,7 +93,10 @@
         <ng-container *ngIf="element.kind=='path'">
           <path
             [class.unselected-element]="current_index != i && ifdrag"
-            [attr.d]="points_to_path(element.points)" stroke-width="3"  stroke="red"
+            [attr.d]="points_to_path(element.points)"
+            stroke-width="3"
+            stroke="red"
+            fill="none"
           />
         </ng-container>
       </ng-container>
