@@ -10,6 +10,7 @@ export interface Element {
   ry: number;
   color: Color;
   points: Point[];
+  ratio: Point[];
 }
 
 interface Color {
@@ -21,6 +22,13 @@ interface Color {
 export interface Point {
   x: number;
   y: number;
+}
+
+interface CenterRadius {
+  x: number;
+  y: number;
+  rx: number;
+  ry: number;
 }
 
 @Component({
@@ -99,12 +107,20 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+  ngAfterContentInit(): void {
+    //source: https://stackoverflow.com/a/50453912/4624070
+    document.getElementById('mysvg').scrollIntoView({
+      behavior: 'auto',
+      block: 'center',
+      inline: 'center'
+    });
+  }
 
-  rgb_color(color: Color) {
+  rgb_color(color: Color): string {
     return `rgb(${color.r},${color.g},${color.b})`;
   }
 
-  calc_center_and_radius(startpoint: Point, endpoint: Point) {
+  calc_center_and_radius(startpoint: Point, endpoint: Point): CenterRadius {
     var cx = (startpoint.x + endpoint.x) / 2;
     var cy = (startpoint.y + endpoint.y) / 2;
     var rx = Math.abs(startpoint.x - endpoint.x) / 2;
@@ -148,7 +164,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 kind: this.current_mode,
                 ...center_and_radius,
                 color: { r: 0, g: 0, b: 0 },
-                points: []
+                points: [],
+                ratio: []
               };
             } else {
               var points = this.elements[this.elements.length - 1].points;
@@ -158,7 +175,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 kind: this.current_mode,
                 ...center_and_radius,
                 color: { r: 0, g: 0, b: 0 },
-                points: [...prefix_points, end_point]
+                points: [...prefix_points, end_point],
+                ratio: this.elements[this.elements.length - 1].ratio
               };
             }
           }
@@ -166,55 +184,149 @@ export class AppComponent implements OnInit, OnDestroy {
         break;
       }
       case 'cursor': {
-        var element: Element = this.elements[this.current_index];
-        var current_point: Point = get_pos_in_svg(event);
-        var end_point: Point;
+        if (this.elements[this.current_index].kind == 'path') {
+          var element: Element = this.elements[this.current_index];
+          var leftup = { x: element.x - element.rx, y: element.y - element.ry };
+          var length_x = 2 * element.rx;
+          var length_y = 2 * element.ry;
 
-        switch (this.clicked_cursor) {
-          case 'leftup': {
-            end_point = {
-              x: element.x + element.rx,
-              y: element.y + element.ry
-            };
-            break;
+          if (element.ratio.length == 0) {
+            for (let point of element.points) {
+              var diff_x = point.x - leftup.x;
+              var diff_y = point.y - leftup.y;
+              this.elements[this.current_index].ratio.push({
+                x: diff_x / length_x,
+                y: diff_y / length_y
+              });
+            }
           }
-          case 'rightup': {
-            end_point = {
-              x: element.x - element.rx,
-              y: element.y + element.ry
-            };
-            break;
+          var current_point: Point = get_pos_in_svg(event);
+          var end_point: Point;
+
+          switch (this.clicked_cursor) {
+            case 'leftup': {
+              end_point = {
+                x: element.x + element.rx,
+                y: element.y + element.ry
+              };
+              break;
+            }
+            case 'rightup': {
+              end_point = {
+                x: element.x - element.rx,
+                y: element.y + element.ry
+              };
+              break;
+            }
+            case 'leftdown': {
+              end_point = {
+                x: element.x + element.rx,
+                y: element.y - element.ry
+              };
+              break;
+            }
+            case 'rightdown': {
+              end_point = {
+                x: element.x - element.rx,
+                y: element.y - element.ry
+              };
+              break;
+            }
           }
-          case 'leftdown': {
-            end_point = {
-              x: element.x + element.rx,
-              y: element.y - element.ry
+          var center_and_radius = this.calc_center_and_radius(
+            current_point,
+            end_point
+          );
+
+          this.elements[this.current_index].x = center_and_radius.x;
+          this.elements[this.current_index].y = center_and_radius.y;
+          this.elements[this.current_index].rx = center_and_radius.rx;
+          this.elements[this.current_index].ry = center_and_radius.ry;
+
+          var new_length_x = 2 * center_and_radius.rx;
+          var new_length_y = 2 * center_and_radius.ry;
+          var new_leftup = {
+            x: center_and_radius.x - center_and_radius.rx,
+            y: center_and_radius.y - center_and_radius.ry
+          };
+
+          for (let index in element.ratio) {
+            var new_point_x =
+              new_leftup.x + element.ratio[parseInt(index)].x * new_length_x;
+            var new_point_y =
+              new_leftup.y + element.ratio[parseInt(index)].y * new_length_y;
+
+            this.elements[this.current_index].points[parseInt(index)] = {
+              x: new_point_x,
+              y: new_point_y
             };
-            break;
           }
-          case 'rightdown': {
-            end_point = {
-              x: element.x - element.rx,
-              y: element.y - element.ry
-            };
-            break;
+        } else {
+          var element: Element = this.elements[this.current_index];
+          var current_point: Point = get_pos_in_svg(event);
+          var end_point: Point;
+
+          switch (this.clicked_cursor) {
+            case 'leftup': {
+              end_point = {
+                x: element.x + element.rx,
+                y: element.y + element.ry
+              };
+              break;
+            }
+            case 'rightup': {
+              end_point = {
+                x: element.x - element.rx,
+                y: element.y + element.ry
+              };
+              break;
+            }
+            case 'leftdown': {
+              end_point = {
+                x: element.x + element.rx,
+                y: element.y - element.ry
+              };
+              break;
+            }
+            case 'rightdown': {
+              end_point = {
+                x: element.x - element.rx,
+                y: element.y - element.ry
+              };
+              break;
+            }
           }
+          var center_and_radius = this.calc_center_and_radius(
+            current_point,
+            end_point
+          );
+          this.elements[this.current_index].x = center_and_radius.x;
+          this.elements[this.current_index].y = center_and_radius.y;
+          this.elements[this.current_index].rx = center_and_radius.rx;
+          this.elements[this.current_index].ry = center_and_radius.ry;
         }
-        var center_and_radius = this.calc_center_and_radius(
-          current_point,
-          end_point
-        );
-        this.elements[this.current_index].x = center_and_radius.x;
-        this.elements[this.current_index].y = center_and_radius.y;
-        this.elements[this.current_index].rx = center_and_radius.rx;
-        this.elements[this.current_index].ry = center_and_radius.ry;
       }
       case 'move': {
         if (this.current_mode == 'move') {
           if (this.ifdrag) {
-            var circle_info = get_pos_in_svg(event);
-            this.elements[this.current_index].x = circle_info.x;
-            this.elements[this.current_index].y = circle_info.y;
+            var current_pos = get_pos_in_svg(event);
+            if (this.elements[this.current_index].kind == 'path') {
+              var diff_x = current_pos.x - this.elements[this.current_index].x;
+              var diff_y = current_pos.y - this.elements[this.current_index].y;
+              this.elements[this.current_index].x = current_pos.x;
+              this.elements[this.current_index].y = current_pos.y;
+              for (let index in this.elements[this.current_index].points) {
+                this.elements[this.current_index].points[
+                  parseInt(index)
+                ].x += diff_x;
+                this.elements[this.current_index].points[
+                  parseInt(index)
+                ].y += diff_y;
+              }
+            } else {
+              this.elements[this.current_index].x = current_pos.x;
+              this.elements[this.current_index].y = current_pos.y;
+            }
           }
         }
       }
@@ -233,7 +345,8 @@ export class AppComponent implements OnInit, OnDestroy {
         rx: 1,
         ry: 1,
         color: { r: 0, g: 0, b: 0 },
-        points: []
+        points: [],
+        ratio: []
       });
     }
 
@@ -249,15 +362,51 @@ export class AppComponent implements OnInit, OnDestroy {
           rx: 1,
           ry: 1,
           color: { r: 0, g: 0, b: 0 },
-          points: [this.svg_pos.start, this.svg_pos.start]
+          points: [this.svg_pos.start, this.svg_pos.start],
+          ratio: []
         });
       } else {
-        this.elements[this.elements.length - 1].points = [
+        var points = [
           ...this.elements[this.elements.length - 1].points,
           this.svg_pos.start
         ];
+        var center_radius = this.get_square_of_path(points);
+        this.elements[this.elements.length - 1].points = points;
+        this.elements[this.elements.length - 1].x = center_radius.x;
+        this.elements[this.elements.length - 1].y = center_radius.y;
+        this.elements[this.elements.length - 1].rx = center_radius.rx;
+        this.elements[this.elements.length - 1].ry = center_radius.ry;
       }
     }
+  }
+
+  get_square_of_path(points: Point[]): CenterRadius {
+    var max_x = -Infinity;
+    var min_x = Infinity;
+    var max_y = -Infinity;
+    var min_y = Infinity;
+
+    for (let point of points) {
+      if (point.x > max_x) {
+        max_x = point.x;
+      }
+      if (point.x < min_x) {
+        min_x = point.x;
+      }
+      if (point.y > max_y) {
+        max_y = point.y;
+      }
+      if (point.y < min_y) {
+        min_y = point.y;
+      }
+    }
+
+    var x = (max_x + min_x) / 2;
+    var y = (max_y + min_y) / 2;
+    var rx = (max_x - min_x) / 2;
+    var ry = (max_y - min_y) / 2;
+
+    return { x: x, y: y, rx: rx, ry: ry };
   }
 
   points_to_path(points: Point[]): string {
@@ -270,7 +419,6 @@ export class AppComponent implements OnInit, OnDestroy {
         path = path + `L${points[index].x} ${points[index].y} `;
       }
     }
-
     return path;
   }
 

@@ -1,31 +1,27 @@
-
-
 svg {
-    border: 1px solid black;
+  border: 1px solid black;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 #container {
-    display: flex;
+  display: flex;
 }
 
 #svg-container {
+  flex-grow: 4;
+  height: 100vh;
+  overflow: scroll;
 }
 
-#layer-container {
-    flex: 0 0 200px;
-    border: 1px solid black;
-    height: 100vh;
-
+#svg-container-container {
+  width: 2000px;
+  height: 2000px;
 }
-
-#editor-container {
-    border: 1px solid black;
-    flex:0 0  200px;
-    height: 100vh;
-}
-
 
 .unselected-element {
-    pointer-events: none;
+  pointer-events: none;
 }
-
