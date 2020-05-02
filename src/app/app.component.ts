@@ -128,6 +128,10 @@ export class AppComponent implements OnInit, OnDestroy {
     return { x: cx, y: cy, rx: rx, ry: ry };
   }
 
+  mouseup(event) {
+    this.state.setStateIfLayerDrag(false);
+  }
+
   svg_mouseup(event) {
     switch (this.onclick_condition) {
       case 'move': {

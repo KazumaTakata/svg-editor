@@ -1,43 +1,50 @@
-<div id="layer-container">
-    <div *ngIf="current_mode=='move'">
-        <div>
-            <p>
-            Color
-            </p>
-            <input [(ngModel)]="elements[current_index].color.r" placeholder="r"/>
-            <input [(ngModel)]="elements[current_index].color.g" placeholder="g"/>
-            <input [(ngModel)]="elements[current_index].color.b" placeholder="b"/>
-        </div>
-        <div>
-            <p>
-            Radius 
-            </p>
-            <input [(ngModel)]="elements[current_index].rx" placeholder="r"/>
-            <input [(ngModel)]="elements[current_index].ry" placeholder="r"/>
-        </div>
-
-        <div>
-            <p>
-            Center 
-            </p>
-            <input [(ngModel)]="elements[current_index].x" placeholder="r"/>
-            <input [(ngModel)]="elements[current_index].y" placeholder="r"/>
-        </div>
-
-
+<div id="editor-container">
+  <div *ngIf="current_mode=='move'">
+    <div>
+      <p>
+        Color
+      </p>
+      <input [(ngModel)]="elements[current_index].color.r" placeholder="r" />
+      <input [(ngModel)]="elements[current_index].color.g" placeholder="g" />
+      <input [(ngModel)]="elements[current_index].color.b" placeholder="b" />
+    </div>
+    <div>
+      <p>
+        Radius
+      </p>
+      <input [(ngModel)]="elements[current_index].rx" placeholder="r" />
+      <input [(ngModel)]="elements[current_index].ry" placeholder="r" />
     </div>
 
     <div>
-        <p>
-        Layer
-        </p>
-        <ul>
-            <ng-container  *ngFor="let element of elements; let i = index;">
-                <li *ngIf="i != current_layer_index"  (mousemove)="layer_mousemove($event, i)"(mouseup)="layer_mouseup($event, i)" (mousedown)="layer_mousedown($event, i)" >
-                    x: {{element.x}}, y: {{element.y}}
-                </li>
-            </ng-container>
-        </ul>
+      <p>
+        Center
+      </p>
+      <input [(ngModel)]="elements[current_index].x" placeholder="r" />
+      <input [(ngModel)]="elements[current_index].y" placeholder="r" />
     </div>
-</div>
+  </div>
 
+  <div>
+    <p>
+      Layer
+    </p>
+    <div id="layer-container">
+      <ul>
+        <ng-container *ngFor="let element of elements; let i = index;">
+          <li
+            [class.movingover-element]="movingover_index == i && if_layer_drag"
+            *ngIf="i != current_layer_index  || !if_layer_drag"
+            (mousemove)="layer_mousemove($event, i)"
+            (mouseup)="layer_mouseup($event, i)"
+            (mousedown)="layer_mousedown($event, i)"
+          >
+            x: {{element.x}}, y: {{element.y}}
+          </li>
+        </ng-container>
+        <li     [class.movingover-element]="movingover_index == -1 && if_layer_drag"
+         (mouseup)="layer_mouseup($event, -1)"(mousemove)="layer_mousemove($event, -1)" ></li>
+      </ul>
+    </div>
+  </div>
+</div>

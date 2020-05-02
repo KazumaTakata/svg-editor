@@ -7,6 +7,7 @@ interface State {
   mode: string;
   elements: Element[];
   current_index: number;
+  if_layer_drag: boolean;
 }
 
 @Injectable({
@@ -39,7 +40,8 @@ export class StateService {
         ratio: []
       }
     ],
-    current_index: 0
+    current_index: 0,
+    if_layer_drag: false
   };
   private stateTracker = new BehaviorSubject<State>(this.initState);
 
@@ -56,7 +58,8 @@ export class StateService {
     this.stateTracker.next({
       mode: current_state.mode,
       elements: elements,
-      current_index: current_state.current_index
+      current_index: current_state.current_index,
+      if_layer_drag: current_state.if_layer_drag
     });
   }
 
@@ -65,7 +68,8 @@ export class StateService {
     this.stateTracker.next({
       mode: mode,
       elements: current_state.elements,
-      current_index: current_state.current_index
+      current_index: current_state.current_index,
+      if_layer_drag: current_state.if_layer_drag
     });
   }
 
@@ -74,7 +78,18 @@ export class StateService {
     this.stateTracker.next({
       mode: current_state.mode,
       elements: current_state.elements,
-      current_index: current_index
+      current_index: current_index,
+      if_layer_drag: current_state.if_layer_drag
+    });
+  }
+
+  setStateIfLayerDrag(if_layer_drag: boolean): void {
+    var current_state = this.stateTracker.getValue();
+    this.stateTracker.next({
+      mode: current_state.mode,
+      elements: current_state.elements,
+      current_index: current_state.current_index,
+      if_layer_drag: if_layer_drag
     });
   }
 
