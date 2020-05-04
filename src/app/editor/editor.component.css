@@ -21,6 +21,13 @@ li {
 }
 
 #layer-container {
-  height: 400px;
   overflow: scroll;
+  height:calc(100vh - 400px);
+}
+
+#dragged_layer {
+  position: absolute;
+  pointer-events: none;
+  padding: 20px;
+  border: 1px solid black;
 }

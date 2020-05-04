@@ -1,4 +1,12 @@
 <div id="editor-container">
+  <div
+    *ngIf="if_layer_drag"
+    id="dragged_layer"
+    [style.left]="return_leftpos()"
+    [style.top]="return_toppos()"
+  >
+    {{dragged_layer.name}}
+  </div>
   <div *ngIf="current_mode=='move'">
     <div>
       <p>
@@ -38,12 +46,21 @@
             (mousemove)="layer_mousemove($event, i)"
             (mouseup)="layer_mouseup($event, i)"
             (mousedown)="layer_mousedown($event, i)"
+            (dblclick)="layer_dblclick($event, i)"
           >
-            x: {{element.x}}, y: {{element.y}}
+            <ng-container *ngIf="dblclick_index==i">
+              <input [(ngModel)]="element.name" id="layer-input" />
+            </ng-container>
+            <ng-container *ngIf="dblclick_index!=i">
+              {{element.name}}
+            </ng-container>
           </li>
         </ng-container>
-        <li     [class.movingover-element]="movingover_index == -1 && if_layer_drag"
-         (mouseup)="layer_mouseup($event, -1)"(mousemove)="layer_mousemove($event, -1)" ></li>
+        <li
+          [class.movingover-element]="movingover_index == -1 && if_layer_drag"
+          (mouseup)="layer_mouseup($event, -1)"
+          (mousemove)="layer_mousemove($event, -1)"
+        ></li>
       </ul>
     </div>
   </div>

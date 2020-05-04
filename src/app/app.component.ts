@@ -11,6 +11,7 @@ export interface Element {
   color: Color;
   points: Point[];
   ratio: Point[];
+  name: string;
 }
 
 interface Color {
@@ -31,6 +32,12 @@ interface CenterRadius {
   ry: number;
 }
 
+interface Counter {
+  ellipse: number;
+  square: number;
+  path: number;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -49,7 +56,7 @@ export class AppComponent implements OnInit, OnDestroy {
   cursor_box_size = 8;
   onclick_condition: string;
   clicked_cursor: string;
-
+  counter: Counter = { ellipse: 0, square: 0, path: 0 };
   cursor_boxs = ['leftup', 'rightup', 'leftdown', 'rightdown'];
 
   keydown(event): void {
@@ -132,6 +139,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.state.setStateIfLayerDrag(false);
   }
 
+  mousemove(event) {
+    var mouse_position: Point = { x: event.clientX, y: event.clientY };
+    this.state.setStateMousePosition(mouse_position);
+  }
+
   svg_mouseup(event) {
     switch (this.onclick_condition) {
       case 'move': {
@@ -169,7 +181,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 ...center_and_radius,
                 color: { r: 0, g: 0, b: 0 },
                 points: [],
-                ratio: []
+                ratio: [],
+                name: this.elements[this.elements.length - 1].name
               };
             } else {
               var points = this.elements[this.elements.length - 1].points;
@@ -180,7 +193,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 ...center_and_radius,
                 color: { r: 0, g: 0, b: 0 },
                 points: [...prefix_points, end_point],
-                ratio: this.elements[this.elements.length - 1].ratio
+                ratio: this.elements[this.elements.length - 1].ratio,
+                name: this.elements[this.elements.length - 1].name
               };
             }
           }
@@ -350,8 +364,10 @@ export class AppComponent implements OnInit, OnDestroy {
         ry: 1,
         color: { r: 0, g: 0, b: 0 },
         points: [],
-        ratio: []
+        ratio: [],
+        name: this.current_mode + this.counter[this.current_mode]
       });
+      this.counter[this.current_mode] += 1;
     }
 
     if (this.current_mode == 'path') {
@@ -367,8 +383,10 @@ export class AppComponent implements OnInit, OnDestroy {
           ry: 1,
           color: { r: 0, g: 0, b: 0 },
           points: [this.svg_pos.start, this.svg_pos.start],
-          ratio: []
+          ratio: [],
+          name: 'path' + this.counter.path
         });
+        this.counter.path += 1;
       } else {
         var points = [
           ...this.elements[this.elements.length - 1].points,
