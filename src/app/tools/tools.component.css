@@ -1,24 +1,18 @@
-
-.tools-element{
-    padding:10px;
-    color:blue;
+.tools-element {
+  padding: 10px;
+  color: #606c76;
 }
 
-.tools-element-selected{
-    padding:10px;
-    color:orange;
+.tools-element-selected {
+  padding: 10px;
+  color: #9b4dca;
 }
 
 #tools-container {
-    border: 1px solid black;
-    height: 100vh;
-
+  border: 1px solid #606c76;
+  height: 100vh;
 }
-
-
 
 .selectedMode {
-    color:orange !important;
+  color: #9b4dca !important;
 }
-
-

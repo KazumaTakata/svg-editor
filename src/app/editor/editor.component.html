@@ -12,24 +12,52 @@
       <p>
         Color
       </p>
-      <input [(ngModel)]="elements[current_index].color.r" placeholder="r" />
-      <input [(ngModel)]="elements[current_index].color.g" placeholder="g" />
-      <input [(ngModel)]="elements[current_index].color.b" placeholder="b" />
+      <input
+        type="text"
+        [(ngModel)]="elements[current_index].color.r"
+        placeholder="r"
+      />
+      <input
+        type="text"
+        [(ngModel)]="elements[current_index].color.g"
+        placeholder="g"
+      />
+      <input
+        type="text"
+        [(ngModel)]="elements[current_index].color.b"
+        placeholder="b"
+      />
     </div>
     <div>
       <p>
         Radius
       </p>
-      <input [(ngModel)]="elements[current_index].rx" placeholder="r" />
-      <input [(ngModel)]="elements[current_index].ry" placeholder="r" />
+      <input
+        type="text"
+        [(ngModel)]="elements[current_index].rx"
+        placeholder="r"
+      />
+      <input
+        type="text"
+        [(ngModel)]="elements[current_index].ry"
+        placeholder="r"
+      />
     </div>
 
     <div>
       <p>
         Center
       </p>
-      <input [(ngModel)]="elements[current_index].x" placeholder="r" />
-      <input [(ngModel)]="elements[current_index].y" placeholder="r" />
+      <input
+        type="text"
+        [(ngModel)]="elements[current_index].x"
+        placeholder="r"
+      />
+      <input
+        type="text"
+        [(ngModel)]="elements[current_index].y"
+        placeholder="r"
+      />
     </div>
   </div>
 
@@ -49,7 +77,7 @@
             (dblclick)="layer_dblclick($event, i)"
           >
             <ng-container *ngIf="dblclick_index==i">
-              <input [(ngModel)]="element.name" id="layer-input" />
+              <input type="text" [(ngModel)]="element.name" id="layer-input" />
             </ng-container>
             <ng-container *ngIf="dblclick_index!=i">
               {{element.name}}
