@@ -1,0 +1,44 @@
+@import '../../scss/Color';
+
+
+#editor-container {
+  border: 1px solid $color-secondary;
+  width: 200px;
+  height: 100vh;
+  padding: 20px;
+}
+
+.movingover-element {
+  border-top: 1px solid $color-secondary;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  border: 1px solid $color-quaternary;
+  padding: 10px;
+  margin: 0px;
+}
+
+li:hover {
+  border: 1px solid $color-primary;
+  color: #9b4dca;
+}
+
+#layer-container {
+  overflow: scroll;
+  height: calc(100vh - 800px);
+  border: 1px solid $color-quaternary;
+  margin: 10px;
+}
+
+#dragged_layer {
+  position: absolute;
+  pointer-events: none;
+  padding: 20px;
+  border: 1px solid $color-secondary;
+}

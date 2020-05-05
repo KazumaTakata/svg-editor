@@ -6,7 +6,7 @@ import { Point, Element } from '../app.component';
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.css']
+  styleUrls: ['./editor.component.scss']
 })
 export class EditorComponent implements OnInit {
   current_layer_index = -1;

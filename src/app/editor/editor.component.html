@@ -1,4 +1,11 @@
 <div id="editor-container">
+  <div>
+
+    <button class="button button-outline">Export</button>
+    
+    <button class="button button-outline">Import</button>
+    
+  </div>
   <div
     *ngIf="if_layer_drag"
     id="dragged_layer"
@@ -90,6 +97,9 @@
           (mousemove)="layer_mousemove($event, -1)"
         ></li>
       </ul>
+    </div>
+    <div>
+      <button class="button button-outline">group</button>
     </div>
   </div>
 </div>

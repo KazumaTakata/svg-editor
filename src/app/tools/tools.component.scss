@@ -1,0 +1,21 @@
+@import '../../scss/Color';
+
+
+.tools-element {
+  padding: 10px;
+  color: $color-quaternary;
+}
+
+.tools-element-selected {
+  padding: 10px;
+  color: $color-primary;
+}
+
+#tools-container {
+  border: 1px solid $color-quaternary;
+  height: 100vh;
+}
+
+.selectedMode {
+  color: $color-primary !important;
+}
