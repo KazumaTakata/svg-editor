@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
-import { Element, Point } from './app.component';
+import { Element, Point } from './model';
 
 interface State {
   mode: string;

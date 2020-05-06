@@ -1,44 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StateService } from './state.service';
-import { get_pos_in_svg } from './utils';
-
-export interface Element {
-  kind: string;
-  x: number;
-  y: number;
-  rx: number;
-  ry: number;
-  color: Color;
-  points: Point[];
-  ratio: Point[];
-  name: string;
-  elements: Element[];
-}
-
-interface Color {
-  r: number;
-  g: number;
-  b: number;
-}
-
-export interface Point {
-  x: number;
-  y: number;
-}
-
-interface CenterRadius {
-  x: number;
-  y: number;
-  rx: number;
-  ry: number;
-}
-
-interface Counter {
-  ellipse: number;
-  square: number;
-  path: number;
-  group: number;
-}
+import { get_pos_in_svg, get_square_of_path } from './utils';
+import { Point, Element, Color, CenterRadius, Counter } from './model';
 
 @Component({
   selector: 'app-root',
@@ -69,33 +32,6 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  calc_cursor_offset_x(cursor_boxs_kind: string, element: Element): number {
-    switch (cursor_boxs_kind) {
-      case 'leftup':
-        return -element.rx - this.cursor_box_size / 2;
-      case 'leftdown':
-        return -element.rx - this.cursor_box_size / 2;
-      case 'rightup':
-        return element.rx - this.cursor_box_size / 2;
-      case 'rightdown':
-        return element.rx - this.cursor_box_size / 2;
-    }
-  }
-
-  calc_cursor_offset_y(cursor_boxs_kind: string, element: Element): number {
-    switch (cursor_boxs_kind) {
-      case 'leftup':
-        return -element.ry - this.cursor_box_size / 2;
-      case 'rightup':
-        return -element.ry - this.cursor_box_size / 2;
-      case 'leftdown':
-        return element.ry - this.cursor_box_size / 2;
-      case 'rightdown':
-        return element.ry - this.cursor_box_size / 2;
-    }
-  }
-
   current_mode: string;
   subscription;
 
@@ -124,11 +60,6 @@ export class AppComponent implements OnInit, OnDestroy {
       inline: 'center'
     });
   }
-
-  rgb_color(color: Color): string {
-    return `rgb(${color.r},${color.g},${color.b})`;
-  }
-
   calc_center_and_radius(startpoint: Point, endpoint: Point): CenterRadius {
     var cx = (startpoint.x + endpoint.x) / 2;
     var cy = (startpoint.y + endpoint.y) / 2;
@@ -404,7 +335,7 @@ export class AppComponent implements OnInit, OnDestroy {
           ...this.elements[this.elements.length - 1].points,
           this.svg_pos.start
         ];
-        var center_radius = this.get_square_of_path(points);
+        var center_radius = get_square_of_path(points);
         this.elements[this.elements.length - 1].points = points;
         this.elements[this.elements.length - 1].x = center_radius.x;
         this.elements[this.elements.length - 1].y = center_radius.y;
@@ -412,48 +343,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.elements[this.elements.length - 1].ry = center_radius.ry;
       }
     }
-  }
-
-  get_square_of_path(points: Point[]): CenterRadius {
-    var max_x = -Infinity;
-    var min_x = Infinity;
-    var max_y = -Infinity;
-    var min_y = Infinity;
-
-    for (let point of points) {
-      if (point.x > max_x) {
-        max_x = point.x;
-      }
-      if (point.x < min_x) {
-        min_x = point.x;
-      }
-      if (point.y > max_y) {
-        max_y = point.y;
-      }
-      if (point.y < min_y) {
-        min_y = point.y;
-      }
-    }
-
-    var x = (max_x + min_x) / 2;
-    var y = (max_y + min_y) / 2;
-    var rx = (max_x - min_x) / 2;
-    var ry = (max_y - min_y) / 2;
-
-    return { x: x, y: y, rx: rx, ry: ry };
-  }
-
-  points_to_path(points: Point[]): string {
-    var path: string = '';
-    for (let i in points) {
-      var index = parseInt(i);
-      if (index == 0) {
-        path = path + `M${points[index].x} ${points[index].y} `;
-      } else {
-        path = path + `L${points[index].x} ${points[index].y} `;
-      }
-    }
-    return path;
   }
 
   element_mousedown(event, index): void {
@@ -464,7 +353,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  cursor_mousedown(event, kind: string): void {
+  cursor_mousedown(kind: string): void {
     this.onclick_condition = 'cursor';
     this.clicked_cursor = kind;
   }

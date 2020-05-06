@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StateService } from '../state.service';
 import { get_pos_in_svg } from '../utils';
-import { Point, Element } from '../app.component';
+import { Point, Element } from '../model';
 
 interface Counter {
   group: number;

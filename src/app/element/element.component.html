@@ -1,0 +1,118 @@
+<svg:ng-container *ngIf="element.kind=='ellipse'">
+  <ellipse
+    [class.unselected-element]="current_index != index && ifdrag"
+    (mousemove)="svg_mousemove($event)"
+    (mouseup)="svg_mouseup($event)"
+    (mousedown)="element_mousedown($event, index)"
+    [attr.cx]="element.x"
+    [attr.cy]="element.y"
+    [attr.rx]="element.rx"
+    [attr.ry]="element.ry"
+    [attr.fill]="rgb_color(element.color)"
+  />
+
+  <ng-container *ngIf="current_index == index">
+    <rect
+      [class.unselected-element]="current_index != index && ifdrag"
+      [attr.x]="element.x - element.rx"
+      [attr.y]="element.y - element.ry"
+      [attr.width]="element.rx*2"
+      [attr.height]="element.ry*2"
+      stroke-width="1"
+      stroke="gray"
+      fill="none"
+    ></rect>
+    <rect
+      *ngFor="let cursor_box of cursor_boxs;"
+      [class.unselected-element]="current_index != index && ifdrag"
+      (mousemove)="svg_mousemove($event) "
+      (mouseup)="svg_mouseup($event)"
+      (mousedown)="cursor_mousedown(cursor_box)"
+      [attr.x]="element.x + calc_cursor_offset_x(cursor_box, element)"
+      [attr.y]="element.y + calc_cursor_offset_y(cursor_box, element)"
+      [attr.width]="cursor_box_size"
+      [attr.height]="cursor_box_size"
+      stroke-width="1"
+      stroke="gray"
+      fill="white"
+    ></rect>
+  </ng-container>
+</svg:ng-container>
+
+<svg:ng-container *ngIf="element.kind=='square'">
+  <rect
+    [class.unselected-element]="current_index != index && ifdrag"
+    (mousedown)="element_mousedown($event, index)"
+    [attr.x]="element.x - element.rx"
+    [attr.y]="element.y - element.ry"
+    [attr.width]="element.rx*2"
+    [attr.height]="element.ry*2"
+    [attr.fill]="rgb_color(element.color)"
+  />
+
+  <ng-container *ngIf="current_index == index">
+    <rect
+      [class.unselected-element]="current_index != index && ifdrag"
+      [attr.x]="element.x - element.rx"
+      [attr.y]="element.y - element.ry"
+      [attr.width]="element.rx*2"
+      [attr.height]="element.ry*2"
+      stroke-width="1"
+      stroke="gray"
+      fill="none"
+    />
+    <rect
+      *ngFor="let cursor_box of cursor_boxs;"
+      [class.unselected-element]="current_index != index && ifdrag"
+      (mousemove)="svg_mousemove($event) "
+      (mouseup)="svg_mouseup($event)"
+      (mousedown)="cursor_mousedown( cursor_box)"
+      [attr.x]="element.x + calc_cursor_offset_x(cursor_box, element)"
+      [attr.y]="element.y + calc_cursor_offset_y(cursor_box, element)"
+      [attr.width]="cursor_box_size"
+      [attr.height]="cursor_box_size"
+      stroke-width="1"
+      stroke="gray"
+      fill="white"
+    />
+  </ng-container>
+</svg:ng-container>
+
+<svg:ng-container *ngIf="element.kind=='path'">
+  <path
+    [class.unselected-element]="current_index != index && ifdrag"
+    [attr.d]="points_to_path(element.points)"
+    (mousedown)="element_mousedown($event, index)"
+    stroke-width="3"
+    stroke="red"
+    fill="none"
+  />
+  <ng-container *ngIf="current_index == index">
+    <ng-container *ngIf="get_square_of_path(element.points) as center_radius">
+      <rect
+        [class.unselected-element]="current_index != index && ifdrag"
+        [attr.x]="center_radius.x - center_radius.rx"
+        [attr.y]="center_radius.y - center_radius.ry"
+        [attr.width]="center_radius.rx*2"
+        [attr.height]="center_radius.ry*2"
+        stroke-width="1"
+        stroke="gray"
+        fill="none"
+      />
+      <rect
+        *ngFor="let cursor_box of cursor_boxs;"
+        [class.unselected-element]="current_index != index && ifdrag"
+        (mousemove)="svg_mousemove($event) "
+        (mouseup)="svg_mouseup($event)"
+        (mousedown)="cursor_mousedown( cursor_box)"
+        [attr.x]="center_radius.x + calc_cursor_offset_x(cursor_box, center_radius)"
+        [attr.y]="center_radius.y + calc_cursor_offset_y(cursor_box, center_radius)"
+        [attr.width]="cursor_box_size"
+        [attr.height]="cursor_box_size"
+        stroke-width="1"
+        stroke="gray"
+        fill="white"
+      />
+    </ng-container>
+  </ng-container>
+</svg:ng-container>
