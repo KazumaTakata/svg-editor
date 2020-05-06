@@ -1,5 +1,4 @@
-@import '../../scss/Color';
-
+@import "../../scss/Color";
 
 #editor-container {
   border: 1px solid $color-secondary;
@@ -19,6 +18,7 @@ ul {
 }
 
 li {
+  font-weight: 700;
   border: 1px solid $color-quaternary;
   padding: 10px;
   margin: 0px;
@@ -41,4 +41,9 @@ li:hover {
   pointer-events: none;
   padding: 20px;
   border: 1px solid $color-secondary;
+}
+
+.shift-selected-element {
+  border: 1px solid $color-primary;
+  color: #9b4dca;
 }

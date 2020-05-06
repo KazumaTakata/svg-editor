@@ -12,6 +12,7 @@ export interface Element {
   points: Point[];
   ratio: Point[];
   name: string;
+  elements: Element[];
 }
 
 interface Color {
@@ -36,6 +37,7 @@ interface Counter {
   ellipse: number;
   square: number;
   path: number;
+  group: number;
 }
 
 @Component({
@@ -56,7 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
   cursor_box_size = 8;
   onclick_condition: string;
   clicked_cursor: string;
-  counter: Counter = { ellipse: 0, square: 0, path: 0 };
+  counter: Counter = { ellipse: 0, square: 0, path: 0, group: 0 };
   cursor_boxs = ['leftup', 'rightup', 'leftdown', 'rightdown'];
 
   keydown(event): void {
@@ -135,6 +137,8 @@ export class AppComponent implements OnInit, OnDestroy {
     return { x: cx, y: cy, rx: rx, ry: ry };
   }
 
+  mousedown(event) {}
+
   mouseup(event) {
     this.state.setStateIfLayerDrag(false);
   }
@@ -182,7 +186,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 color: { r: 0, g: 0, b: 0 },
                 points: [],
                 ratio: [],
-                name: this.elements[this.elements.length - 1].name
+                name: this.elements[this.elements.length - 1].name,
+                elements: this.elements[this.elements.length - 1].elements
               };
             } else {
               var points = this.elements[this.elements.length - 1].points;
@@ -194,7 +199,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 color: { r: 0, g: 0, b: 0 },
                 points: [...prefix_points, end_point],
                 ratio: this.elements[this.elements.length - 1].ratio,
-                name: this.elements[this.elements.length - 1].name
+                name: this.elements[this.elements.length - 1].name,
+                elements: this.elements[this.elements.length - 1].elements
               };
             }
           }
@@ -352,6 +358,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   svg_mousedown(event) {
+    if (!event.shiftKey) {
+      this.state.resetStateShiftSelectedIndexs();
+    }
+
     if (this.current_mode == 'ellipse' || this.current_mode == 'square') {
       this.onclick_condition = 'create';
       this.svg_ifdrag = true;
@@ -365,7 +375,8 @@ export class AppComponent implements OnInit, OnDestroy {
         color: { r: 0, g: 0, b: 0 },
         points: [],
         ratio: [],
-        name: this.current_mode + this.counter[this.current_mode]
+        name: this.current_mode + this.counter[this.current_mode],
+        elements: []
       });
       this.counter[this.current_mode] += 1;
     }
@@ -384,7 +395,8 @@ export class AppComponent implements OnInit, OnDestroy {
           color: { r: 0, g: 0, b: 0 },
           points: [this.svg_pos.start, this.svg_pos.start],
           ratio: [],
-          name: 'path' + this.counter.path
+          name: 'path' + this.counter.path,
+          elements: []
         });
         this.counter.path += 1;
       } else {

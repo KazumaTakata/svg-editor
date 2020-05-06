@@ -1,10 +1,7 @@
 <div id="editor-container">
   <div>
-
     <button class="button button-outline">Export</button>
-    
     <button class="button button-outline">Import</button>
-    
   </div>
   <div
     *ngIf="if_layer_drag"
@@ -15,57 +12,59 @@
     {{dragged_layer.name}}
   </div>
   <div *ngIf="current_mode=='move'">
-    <div>
-      <p>
-        Color
-      </p>
-      <input
-        type="text"
-        [(ngModel)]="elements[current_index].color.r"
-        placeholder="r"
-      />
-      <input
-        type="text"
-        [(ngModel)]="elements[current_index].color.g"
-        placeholder="g"
-      />
-      <input
-        type="text"
-        [(ngModel)]="elements[current_index].color.b"
-        placeholder="b"
-      />
-    </div>
-    <div>
-      <p>
-        Radius
-      </p>
-      <input
-        type="text"
-        [(ngModel)]="elements[current_index].rx"
-        placeholder="r"
-      />
-      <input
-        type="text"
-        [(ngModel)]="elements[current_index].ry"
-        placeholder="r"
-      />
-    </div>
+    <ng-container *ngIf="elements[current_index].kind!='group'">
+      <div>
+        <p>
+          Color
+        </p>
+        <input
+          type="text"
+          [(ngModel)]="elements[current_index].color.r"
+          placeholder="r"
+        />
+        <input
+          type="text"
+          [(ngModel)]="elements[current_index].color.g"
+          placeholder="g"
+        />
+        <input
+          type="text"
+          [(ngModel)]="elements[current_index].color.b"
+          placeholder="b"
+        />
+      </div>
+      <div>
+        <p>
+          Radius
+        </p>
+        <input
+          type="text"
+          [(ngModel)]="elements[current_index].rx"
+          placeholder="r"
+        />
+        <input
+          type="text"
+          [(ngModel)]="elements[current_index].ry"
+          placeholder="r"
+        />
+      </div>
 
-    <div>
-      <p>
-        Center
-      </p>
-      <input
-        type="text"
-        [(ngModel)]="elements[current_index].x"
-        placeholder="r"
-      />
-      <input
-        type="text"
-        [(ngModel)]="elements[current_index].y"
-        placeholder="r"
-      />
-    </div>
+      <div>
+        <p>
+          Center
+        </p>
+        <input
+          type="text"
+          [(ngModel)]="elements[current_index].x"
+          placeholder="r"
+        />
+        <input
+          type="text"
+          [(ngModel)]="elements[current_index].y"
+          placeholder="r"
+        />
+      </div>
+    </ng-container>
   </div>
 
   <div>
@@ -77,6 +76,7 @@
         <ng-container *ngFor="let element of elements; let i = index;">
           <li
             [class.movingover-element]="movingover_index == i && if_layer_drag"
+            [class.shift-selected-element]="shift_selected_indexs.has(i)"
             *ngIf="i != current_layer_index  || !if_layer_drag"
             (mousemove)="layer_mousemove($event, i)"
             (mouseup)="layer_mouseup($event, i)"
@@ -99,7 +99,9 @@
       </ul>
     </div>
     <div>
-      <button class="button button-outline">group</button>
+      <button class="button button-outline" (click)="group_click($event)">
+        group
+      </button>
     </div>
   </div>
 </div>

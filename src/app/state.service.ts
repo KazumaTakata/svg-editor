@@ -9,6 +9,7 @@ interface State {
   current_index: number;
   if_layer_drag: boolean;
   mouse_position: Point;
+  shift_selected_indexs: Set<number>;
 }
 
 @Injectable({
@@ -29,7 +30,8 @@ export class StateService {
         color: { r: 200, g: 0, b: 0 },
         points: [],
         ratio: [],
-        name: "ellipse1"
+        name: 'ellipse1',
+        elements: []
       },
       {
         kind: 'square',
@@ -40,12 +42,14 @@ export class StateService {
         color: { r: 0, g: 200, b: 0 },
         points: [],
         ratio: [],
-        name: "square1"
+        name: 'square1',
+        elements: []
       }
     ],
     current_index: 0,
     if_layer_drag: false,
-    mouse_position: { x: 0, y: 0 }
+    mouse_position: { x: 0, y: 0 },
+    shift_selected_indexs: new Set<number>()
   };
   private stateTracker = new BehaviorSubject<State>(this.initState);
 
@@ -64,7 +68,8 @@ export class StateService {
       elements: elements,
       current_index: current_state.current_index,
       if_layer_drag: current_state.if_layer_drag,
-      mouse_position: current_state.mouse_position
+      mouse_position: current_state.mouse_position,
+      shift_selected_indexs: current_state.shift_selected_indexs
     });
   }
 
@@ -75,7 +80,8 @@ export class StateService {
       elements: current_state.elements,
       current_index: current_state.current_index,
       if_layer_drag: current_state.if_layer_drag,
-      mouse_position: current_state.mouse_position
+      mouse_position: current_state.mouse_position,
+      shift_selected_indexs: current_state.shift_selected_indexs
     });
   }
 
@@ -86,7 +92,8 @@ export class StateService {
       elements: current_state.elements,
       current_index: current_index,
       if_layer_drag: current_state.if_layer_drag,
-      mouse_position: current_state.mouse_position
+      mouse_position: current_state.mouse_position,
+      shift_selected_indexs: current_state.shift_selected_indexs
     });
   }
 
@@ -97,7 +104,8 @@ export class StateService {
       elements: current_state.elements,
       current_index: current_state.current_index,
       if_layer_drag: if_layer_drag,
-      mouse_position: current_state.mouse_position
+      mouse_position: current_state.mouse_position,
+      shift_selected_indexs: current_state.shift_selected_indexs
     });
   }
 
@@ -108,7 +116,32 @@ export class StateService {
       elements: current_state.elements,
       current_index: current_state.current_index,
       if_layer_drag: current_state.if_layer_drag,
-      mouse_position: mouse_position
+      mouse_position: mouse_position,
+      shift_selected_indexs: current_state.shift_selected_indexs
+    });
+  }
+
+  setStateShiftSelectedIndexs(index: number): void {
+    var current_state = this.stateTracker.getValue();
+    this.stateTracker.next({
+      mode: current_state.mode,
+      elements: current_state.elements,
+      current_index: current_state.current_index,
+      if_layer_drag: current_state.if_layer_drag,
+      mouse_position: current_state.mouse_position,
+      shift_selected_indexs: new Set([...current_state.shift_selected_indexs, index])
+    });
+  }
+
+  resetStateShiftSelectedIndexs(): void {
+    var current_state = this.stateTracker.getValue();
+    this.stateTracker.next({
+      mode: current_state.mode,
+      elements: current_state.elements,
+      current_index: current_state.current_index,
+      if_layer_drag: current_state.if_layer_drag,
+      mouse_position: current_state.mouse_position,
+      shift_selected_indexs: new Set() 
     });
   }
 
